@@ -17,7 +17,7 @@ def sigmoid(x):
     """
 
     ### YOUR CODE HERE (~1 Line)
-    s = 1/1+np.exp(-x)
+    s = 1/(1+np.exp(-x))
     ### END YOUR CODE
 
     return s
@@ -118,16 +118,15 @@ def negSamplingLossAndGradient(
     ### YOUR CODE HERE (~10 Lines)
 
     ### Please use your implementation of sigmoid in here.
-    NegSampWords = outsideVectors[negSampleWordIndices]
-    outVecwithNegSamp = outsideVectors[indices]
     outsideWordVec = outsideVectors[outsideWordIdx]
+    NegSampWordVecs = outsideVectors[negSampleWordIndices]
     
     uo_vc = np.dot(outsideWordVec, centerWordVec)
-    uk_vc = np.dot(NegSampWords, centerWordVec)
-    loss = -np.log(sigmoid(uo_vc)) - np.sum(np.log(sigmoid(-uk_vc)))
+    uk_vc = np.matmul(NegSampWordVecs, centerWordVec)
+    loss = -(np.log(sigmoid(uo_vc)) + np.sum(np.log(sigmoid(-uk_vc))))
 
     gradCenterVec = (sigmoid(uo_vc) - 1) * outsideWordVec -\
-            np.sum((sigmoid(-uk_vc) - 1)[:, np.newaxis] * NegSampWords, axis=0) 
+            np.sum((sigmoid(-uk_vc) - 1)[:, np.newaxis] * NegSampWordVecs, axis=0) 
 
     gradOutsideVecs = 0.0
             
