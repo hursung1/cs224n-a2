@@ -163,7 +163,7 @@ class ParserModel(nn.Module):
         embedding = self.embedding_lookup(w)
         hidden = torch.matmul(embedding, self.embed_to_hidden_weight) + self.embed_to_hidden_bias
         hidden = F.relu(hidden)
-        
+        self.dropout(hidden)
         logits = torch.matmul(hidden, self.hidden_to_logits_weight) + self.hidden_to_logits_bias
         
         ### END YOUR CODE
