@@ -71,16 +71,21 @@ class ParserModel(nn.Module):
         ###     Initialization: https://pytorch.org/docs/stable/nn.init.html
         ###     Dropout: https://pytorch.org/docs/stable/nn.html#dropout-layers
 
-        self.embed_to_hidden_weight = nn.Parameter()
-        self.embed_to_hidden_bias = nn.Parameter()
+        self.embed_to_hidden_weight = torch.tensor(())
+        self.embed_to_hidden_bias = torch.tensor(())
+        self.hidden_to_logits_weight = torch.tensor(())
+        self.hidden_to_logits_bias = torch.tensor(())
+
+        self.embed_to_hidden_weight = nn.Parameter(self.embed_to_hidden_weight.new_empty((self.n_features*self.embed_size, self.hidden_size)))
+        self.embed_to_hidden_bias = nn.Parameter(self.embed_to_hidden_bias.new_empty((self.hidden_size)))
 
         nn.init.xavier_uniform_(self.embed_to_hidden_weight)
         nn.init.uniform_(self.embed_to_hidden_bias)
 
-        self.dropout
+        self.dropout = nn.Dropout(self.dropout_prob)
         
-        self.hidden_to_logits_weight = nn.Parameter()
-        self.hidden_to_logits_bias = nn.Parameter()
+        self.hidden_to_logits_weight = nn.Parameter(self.hidden_to_logits_weight.new_empty((self.hidden_size, self.n_classes)))
+        self.hidden_to_logits_bias = nn.Parameter(self.hidden_to_logits_bias.new_empty(self.n_classes))
 
         nn.init.xavier_uniform_(self.hidden_to_logits_weight)
         nn.init.uniform_(self.hidden_to_logits_bias)
@@ -155,7 +160,12 @@ class ParserModel(nn.Module):
         ###     Matrix product: https://pytorch.org/docs/stable/torch.html#torch.matmul
         ###     ReLU: https://pytorch.org/docs/stable/nn.html?highlight=relu#torch.nn.functional.relu
 
-
+        embedding = self.embedding_lookup(w)
+        hidden = torch.matmul(embedding, self.embed_to_hidden_weight) + self.embed_to_hidden_bias
+        hidden = F.relu(hidden)
+        
+        logits = torch.matmul(hidden, self.hidden_to_logits_weight) + self.hidden_to_logits_bias
+        
         ### END YOUR CODE
         return logits
 
