@@ -71,8 +71,19 @@ class ParserModel(nn.Module):
         ###     Initialization: https://pytorch.org/docs/stable/nn.init.html
         ###     Dropout: https://pytorch.org/docs/stable/nn.html#dropout-layers
 
+        self.embed_to_hidden_weight = nn.Parameter()
+        self.embed_to_hidden_bias = nn.Parameter()
 
+        nn.init.xavier_uniform_(self.embed_to_hidden_weight)
+        nn.init.uniform_(self.embed_to_hidden_bias)
 
+        self.dropout
+        
+        self.hidden_to_logits_weight = nn.Parameter()
+        self.hidden_to_logits_bias = nn.Parameter()
+
+        nn.init.xavier_uniform_(self.hidden_to_logits_weight)
+        nn.init.uniform_(self.hidden_to_logits_bias)
 
         ### END YOUR CODE
 
@@ -104,8 +115,11 @@ class ParserModel(nn.Module):
         ###     Gather: https://pytorch.org/docs/stable/torch.html#torch.gather
         ###     View: https://pytorch.org/docs/stable/tensors.html#torch.Tensor.view
 
+        x = torch.zeros((w.shape[0], w.shape[1] * self.embeddings.shape[1]))
+        for i, features in enumerate(w):
+            x[i] = self.embeddings[features].view(-1)
 
-
+        
         ### END YOUR CODE
         return x
 
