@@ -123,7 +123,6 @@ class ParserModel(nn.Module):
         x = torch.zeros((w.shape[0], w.shape[1] * self.embeddings.shape[1]))
         for i, features in enumerate(w):
             x[i] = self.embeddings[features].view(-1)
-
         
         ### END YOUR CODE
         return x
