@@ -1,0 +1,13 @@
+Average Train Loss: 0.030505254009972404
+Evaluating on dev set
+1445850it [00:00, 50360279.01it/s]
+- dev UAS: 88.42
+
+================================================================================
+TESTING
+================================================================================
+Restoring the best model weights found on the dev set
+Final evaluation on test set
+2919736it [00:00, 73567903.69it/s]
+- test UAS: 88.85
+Done!
